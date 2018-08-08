@@ -26,6 +26,7 @@ done
 # Restore from dump
 
 mongorestore --drop --db CROSSMINER /home/CROSSMINER
+mongorestore --db=users --collection=users users.bson
 
 # Keep container running
 tail -f /dev/null
