@@ -204,5 +204,6 @@ services:
          - ES_URL=https://admin:admin@elasticsearch:9200
          - KIBITER_URL=https://kibiter:80
          - DASHDEBUG=0
+         - SYNC_ES_SCAVA=0
          - QM_URL=https://raw.githubusercontent.com/Bitergia/prosoul/master/django-prosoul/prosoul/data/qmodel_crossminer.json
          - QM_NAME=crossminer
