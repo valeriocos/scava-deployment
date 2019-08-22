@@ -136,7 +136,7 @@ services:
             - "8085:8085"
 
     elasticsearch:
-        image: acsdocker/elasticsearch:6.3.1-secured
+        image: bitergia/elasticsearch:6.1.0-secured
         command: /elasticsearch/bin/elasticsearch -E network.bind_host=0.0.0.0 -Ehttp.max_content_length=500mb
         networks:
             - default
@@ -149,17 +149,21 @@ services:
           - ES_TMPDIR=/tmp
 
     kibiter:
-      image: acsdocker/grimoirelab-kibiter:crossminer-6.3.1
-      networks:
+        image: bitergia/kibiter:secured-v6.1.4-4
+        networks:
           - default
-      depends_on:
+        depends_on:
           - elasticsearch
-      expose:
+        expose:
           - 5601
-      ports:
-       - "80:5601"
-      environment:
-      - ELASTICSEARCH_URL=https://elasticsearch:9200
+        ports:
+          - "80:5601"
+        environment:
+          - ELASTICSEARCH_URL=https://elasticsearch:9200
+          - PROJECT_NAME=CROSSMINER
+          - SUPPORT_ADDRESS=support@bitergia.com
+          - ELASTICSEARCH_USER=kibanaserver
+          - ELASTICSEARCH_PASSWORD=changeme
 
     dashb-importer:
         build: ./dashboard
