@@ -144,6 +144,9 @@ services:
             - 9200
         ports:
           - "9200:9200"
+        volumes:
+          - /elasticsearch-index/:/elasticsearch/data
+          - ./elasticsearch-sg/sgconfig:/elasticsearch/plugins/search-guard-6/sgconfig
         environment:
           - ES_JAVA_OPTS=-Xms2g -Xmx2g
           - ES_TMPDIR=/tmp
