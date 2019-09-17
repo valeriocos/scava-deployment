@@ -28,7 +28,7 @@ services:
     admin-webapp:
         build: ./web-admin
         environment:
-            - API_GATEWAY_VAR=http://localhost:8086
+            - API_GATEWAY_VAR=http://crossminer.bitergia.net:8086
         depends_on:
             - api-server
         networks:
@@ -137,7 +137,9 @@ services:
 
     elasticsearch:
         image: acsdocker/elasticsearch:6.3.1-secured
-        command: /elasticsearch/bin/elasticsearch -E network.bind_host=0.0.0.0 -Ehttp.max_content_length=500mb
+        command: /elasticsearch/bin/elasticsearch -E network.bind_host=0.0.0.0 -Ehttp.max_content_length=1gb
+        volumes:
+            - /elasticsearch-index/:/elasticsearch/data
         networks:
             - default
         expose:
@@ -161,36 +163,36 @@ services:
       environment:
       - ELASTICSEARCH_URL=https://elasticsearch:9200
 
-    dashb-importer:
-        build: ./dashboard
-        entrypoint: ["./wait-for-it.sh", "oss-app:8182", "-t", "0", "--",
-                     "./wait-for-it.sh", "elasticsearch:9200", "-t", "0", "--",
-                     "./wait-for-it.sh", "kibiter:5601", "-t", "0", "--",
-                     "./starter.sh"]
-        depends_on:
-            - oss-app
-            - elasticsearch
-            - kibiter
-        networks:
-            - default
-        environment:
-            - DASHDEBUG=0
-            - BULKSIZE=500
-            - NO_LOOP=0
-
-    prosoul:
-        build: ./quality-model
-        ports:
-         - "8000:8000"
-        depends_on:
-         - kibiter
-         - elasticsearch
-        environment:
-         - ALLOWED_HOSTS=prosoul localhost 127.0.0.1
-         - ES_URL=https://admin:admin@elasticsearch:9200
-         - KIBITER_URL=https://kibiter:80
-         - KIBITER_HOST=http://localhost:80
-         - DASHDEBUG=0
-         - SYNC_ES_SCAVA=0
-         - QM_URL=https://raw.githubusercontent.com/Bitergia/prosoul/master/django-prosoul/prosoul/data/qmodel_crossminer.json
-         - QM_NAME=crossminer
+#    dashb-importer:
+#        build: ./dashboard
+#        entrypoint: ["./wait-for-it.sh", "oss-app:8182", "-t", "0", "--",
+#                     "./wait-for-it.sh", "elasticsearch:9200", "-t", "0", "--",
+#                     "./wait-for-it.sh", "kibiter:5601", "-t", "0", "--",
+#                     "./starter.sh"]
+#        depends_on:
+#            - oss-app
+#            - elasticsearch
+#            - kibiter
+#        networks:
+#            - default
+#        environment:
+#            - DASHDEBUG=0
+#            - BULKSIZE=500
+#            - NO_LOOP=0
+#
+#    prosoul:
+#        build: ./quality-model
+#        ports:
+#         - "8000:8000"
+#        depends_on:
+#         - kibiter
+#         - elasticsearch
+#        environment:
+#         - ALLOWED_HOSTS=prosoul localhost 127.0.0.1
+#         - ES_URL=https://admin:admin@elasticsearch:9200
+#         - KIBITER_URL=https://kibiter:80
+#         - KIBITER_HOST=http://localhost:80
+#         - DASHDEBUG=0
+#         - SYNC_ES_SCAVA=0
+#         - QM_URL=https://raw.githubusercontent.com/Bitergia/prosoul/master/django-prosoul/prosoul/data/qmodel_crossminer.json
+#         - QM_NAME=crossminer
